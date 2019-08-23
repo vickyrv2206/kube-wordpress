@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-server
+  labels:
+    app : sample
+    tier : back-end
+spec:
+  template:
+    metadata:
+      name: mysql
+      labels:
+        app : sample
+        tier : back-end
+    spec:
+      containers:
+      - name : mysql-container
+        image : mysql/mysql-server:8.0.16
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        ports:
+        - containerPort: 3306
+  replicas: 3
+  selector:
+    matchLabels:
+      tier: back-end
+      app: sample
