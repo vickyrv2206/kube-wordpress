@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-server
+spec:
+  template:
+    metadata:
+      name: mysql
+      labels:
+        app: wordpress
+        tier: back-end
+    spec:
+      containers:
+      - name: mysql-container
+        image: mysql:5.6
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-secret
+              key: password
+        ports:
+        - containerPort: 3306
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wordpress
+      tier: back-end
